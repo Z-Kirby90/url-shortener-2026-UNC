@@ -1,0 +1,126 @@
+<!doctype html>
+<html lang="fr">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Réducteur d'URL</title>
+    <meta
+      name="description"
+      content="Transformez une URL longue en lien court, simple à partager."
+    />
+    <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+    <link rel="stylesheet" href="/style.css" />
+    <script src="/copy.js" defer></script>
+    <script src="/app.js" defer></script>
+  </head>
+  <body>
+    <header class="site-header">
+      <div class="inner">
+        <a class="brand" href="/">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+            <path d="M10 14a4.5 4.5 0 0 0 6.4 0l3-3a4.5 4.5 0 0 0-6.4-6.4l-1 1" />
+            <path d="M14 10a4.5 4.5 0 0 0-6.4 0l-3 3a4.5 4.5 0 0 0 6.4 6.4l1-1" />
+          </svg>
+          Réducteur d'URL
+        </a>
+      </div>
+    </header>
+
+    <main>
+      <section class="hero">
+        <h1>Raccourcissez vos liens</h1>
+        <p class="lead">
+          Collez une adresse longue, obtenez un lien court et prêt à être
+          partagé.
+        </p>
+      </section>
+
+      <section class="card">
+        <form id="shorten-form" method="post" action="/api-v2/" novalidate>
+          <label for="url">Votre URL longue</label>
+          <div class="field">
+            <input
+              id="url"
+              name="url"
+              type="url"
+              inputmode="url"
+              placeholder="https://exemple.com/adresse-longue"
+              autocomplete="off"
+              autocapitalize="off"
+              spellcheck="false"
+              aria-describedby="url-hint error"
+              required
+              autofocus
+            />
+            <button class="btn btn-primary" type="submit" id="submit-btn">
+              <span class="spinner" aria-hidden="true"></span>
+              <span id="submit-label">Raccourcir</span>
+            </button>
+          </div>
+          <p class="hint" id="url-hint">
+            L'adresse doit commencer par http:// ou https://
+          </p>
+          <p class="alert alert-error" id="error" role="alert" hidden></p>
+        </form>
+
+        <div class="result" id="result" aria-live="polite" hidden>
+          <p class="result-title">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+              <circle cx="12" cy="12" r="9" />
+              <path d="m8 12.5 2.7 2.7L16 9.5" />
+            </svg>
+            Votre lien est prêt
+          </p>
+
+          <p class="result-label">Lien court</p>
+          <div class="result-box">
+            <a
+              class="short-link"
+              id="short-link"
+              href="#"
+              target="_blank"
+              rel="noopener"
+            ></a>
+            <button
+              class="btn btn-secondary"
+              type="button"
+              data-copy-target="short-link"
+            >
+              Copier l'URL
+            </button>
+          </div>
+          <p class="origin" id="origin"></p>
+
+          <p class="result-label">Clef de suppression</p>
+          <div class="secret-box">
+            <code id="secret"></code>
+            <button
+              class="btn btn-secondary"
+              type="button"
+              data-copy-target="secret"
+            >
+              Copier la clef
+            </button>
+          </div>
+          <p class="hint">
+            Conservez cette clef : elle permet de supprimer le lien et ne sera
+            plus affichée.
+          </p>
+
+          <div class="result-actions">
+            <button class="btn btn-link" type="button" id="reset-btn">
+              Raccourcir un autre lien
+            </button>
+          </div>
+        </div>
+      </section>
+
+      <p class="stat" id="stat" hidden></p>
+    </main>
+
+    <footer class="site-footer">
+      Projet DevWeb · UNC · 2026 ·
+      <a href="/api-docs">Documentation de l'API</a>
+    </footer>
+  </body>
+</html>

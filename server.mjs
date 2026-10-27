@@ -12,6 +12,7 @@ import { errorHandler, notFound } from "./lib/errors.mjs";
 import { logger } from "./lib/logger.mjs";
 import apiV1 from "./router/api-v1.mjs";
 import apiV2 from "./router/api-v2.mjs";
+import redirect from "./router/redirect.mjs";
 
 const pkg = JSON.parse(
   readFileSync(path.join(ROOT_DIR, "package.json"), "utf-8"),
@@ -47,6 +48,7 @@ app.use("/api-docs", swaggerUi.serve, swaggerUi.setup(openApiDoc));
 
 app.use("/api-v1", apiV1);
 app.use("/api-v2", apiV2);
+app.use("/", redirect);
 
 // Doivent rester en dernier : 404 puis gestion centralisée des erreurs.
 app.use(notFound);

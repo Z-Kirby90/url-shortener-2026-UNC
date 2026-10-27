@@ -11,6 +11,7 @@ import { closeDatabase } from "./database/database.mjs";
 import { errorHandler, notFound } from "./lib/errors.mjs";
 import { logger } from "./lib/logger.mjs";
 import apiV1 from "./router/api-v1.mjs";
+import apiV2 from "./router/api-v2.mjs";
 
 const pkg = JSON.parse(
   readFileSync(path.join(ROOT_DIR, "package.json"), "utf-8"),
@@ -45,6 +46,7 @@ const openApiDoc = YAML.load(path.join(ROOT_DIR, "static", "open-api.yaml"));
 app.use("/api-docs", swaggerUi.serve, swaggerUi.setup(openApiDoc));
 
 app.use("/api-v1", apiV1);
+app.use("/api-v2", apiV2);
 
 // Doivent rester en dernier : 404 puis gestion centralisée des erreurs.
 app.use(notFound);

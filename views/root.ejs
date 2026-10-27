@@ -1,0 +1,79 @@
+<%- include('partials/header', { title: "Réducteur d'URL" }) %>
+
+    <main>
+      <section class="hero">
+        <h1>Raccourcissez vos liens</h1>
+        <p class="lead">
+          Collez une adresse longue, obtenez un lien court et prêt à être
+          partagé.
+        </p>
+      </section>
+
+      <section class="card">
+        <form method="post" action="/api-v2/" id="submit-link">
+          <label for="url">Votre URL longue</label>
+          <div class="field">
+            <input
+              name="url"
+              id="url"
+              type="url"
+              inputmode="url"
+              placeholder="https://exemple.com/adresse-longue"
+              autocomplete="off"
+              spellcheck="false"
+              value="<%= value %>"
+              aria-describedby="url-hint<%= error ? ' error' : '' %>"
+              <% if (error) { %>aria-invalid="true"<% } %>
+              required
+              <% if (!link) { %>autofocus<% } %>
+            />
+            <button class="btn btn-primary" type="submit">Raccourcir</button>
+          </div>
+          <p class="hint" id="url-hint">
+            L'adresse doit commencer par http:// ou https://
+          </p>
+          <% if (error) { %>
+            <p class="alert alert-error" id="error" role="alert"><%= error %></p>
+          <% } %>
+        </form>
+
+        <% if (link) { %>
+          <div class="result">
+            <p class="result-title">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                <circle cx="12" cy="12" r="9" />
+                <path d="m8 12.5 2.7 2.7L16 9.5" />
+              </svg>
+              Votre lien est prêt
+            </p>
+
+            <p class="result-label">Lien court</p>
+            <div class="result-box">
+              <a class="short-link" id="short-link" href="<%= link.shortUrl %>" target="_blank" rel="noopener"><%= link.shortUrl %></a>
+              <button class="btn btn-secondary" type="button" data-copy-target="short-link">Copier l'URL</button>
+            </div>
+            <p class="origin">Redirige vers <%= link.origin %></p>
+
+            <p class="result-label">Clef de suppression</p>
+            <div class="secret-box">
+              <code id="secret"><%= link.secret %></code>
+              <button class="btn btn-secondary" type="button" data-copy-target="secret">Copier la clef</button>
+            </div>
+            <p class="hint">
+              Conservez cette clef : elle permet de supprimer le lien et ne sera
+              plus affichée.
+            </p>
+
+            <div class="result-actions">
+              <a class="btn btn-link" href="/api-v2/">Raccourcir un autre lien</a>
+            </div>
+          </div>
+        <% } %>
+      </section>
+
+      <% if (count !== null) { %>
+        <p class="stat"><%= count %> lien<%= count > 1 ? "s" : "" %> créé<%= count > 1 ? "s" : "" %> jusqu'ici</p>
+      <% } %>
+    </main>
+
+<%- include('partials/footer') %>

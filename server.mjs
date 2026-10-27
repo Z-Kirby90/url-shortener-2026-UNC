@@ -10,6 +10,7 @@ import { PORT, LOG_LEVEL, NODE_ENV, ROOT_DIR } from "./config.mjs";
 import { closeDatabase } from "./database/database.mjs";
 import { errorHandler, notFound } from "./lib/errors.mjs";
 import { logger } from "./lib/logger.mjs";
+import apiV1 from "./router/api-v1.mjs";
 
 const pkg = JSON.parse(
   readFileSync(path.join(ROOT_DIR, "package.json"), "utf-8"),
@@ -43,6 +44,7 @@ app.use(express.static(path.join(ROOT_DIR, "static")));
 const openApiDoc = YAML.load(path.join(ROOT_DIR, "static", "open-api.yaml"));
 app.use("/api-docs", swaggerUi.serve, swaggerUi.setup(openApiDoc));
 
+app.use("/api-v1", apiV1);
 
 // Doivent rester en dernier : 404 puis gestion centralisée des erreurs.
 app.use(notFound);

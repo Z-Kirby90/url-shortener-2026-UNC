@@ -56,7 +56,7 @@ npm run format    # prettier sur tous les fichiers .mjs
 | Partie | Contenu                                                       | Tag             | État |
 | ------ | ------------------------------------------------------------- | --------------- | ---- |
 | 1      | Prise en main, réponses aux questions                         | `reponses`      | ✅   |
-| 2      | API v1 (routes manquantes, visites, `config.mjs`)             | `api-v1`        | ⏳   |
+| 2      | API v1 (routes manquantes, visites, `config.mjs`)             | `api-v1`        | ✅   |
 | 3      | API v2 : négociation de contenu, rendu HTML (EJS), erreur 406 | `api-v2`        | ⏳   |
 | 4      | Client AJAX (SPA, `fetch`, copie dans le presse-papier)       | `client-ajax`   | ⏳   |
 | 5      | Suppression sécurisée par clef API (`X-API-Key`)              | `api-v2-delete` | ⏳   |

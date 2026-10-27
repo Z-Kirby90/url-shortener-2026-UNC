@@ -97,7 +97,7 @@ Le `secret` n'est **jamais** renvoyé par `GET /api-v2/:url`.
 | 2      | API v1 (routes manquantes, visites, `config.mjs`)             | `api-v1`        | ✅   |
 | 3      | API v2 : négociation de contenu, rendu HTML (EJS), erreur 406 | `api-v2`        | ✅   |
 | 4      | Client AJAX (SPA, `fetch`, copie dans le presse-papier)       | `client-ajax`   | ✅   |
-| 5      | Suppression sécurisée par clef API (`X-API-Key`)              | `api-v2-delete` | ⏳   |
+| 5      | Suppression sécurisée par clef API (`X-API-Key`)              | `api-v2-delete` | ✅   |
 
 ## Structure du projet
 

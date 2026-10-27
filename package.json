@@ -1,0 +1,37 @@
+{
+  "name": "url-shortener",
+  "version": "1.0.0",
+  "description": "Reducteur d'URL en Node.js/Express - TP devweb",
+  "type": "module",
+  "main": "server.mjs",
+  "scripts": {
+    "start": "node server.mjs",
+    "dev": "cross-env NODE_ENV=development nodemon server.mjs",
+    "prod": "cross-env NODE_ENV=production node server.mjs",
+    "format": "prettier --write \"**/*.mjs\"",
+    "test": "node --test"
+  },
+  "dependencies": {
+    "dotenv": "^16.4.5",
+    "ejs": "^3.1.10",
+    "express": "^4.19.2",
+    "morgan": "^1.10.0",
+    "nanoid": "^5.0.7",
+    "serve-favicon": "^2.5.0",
+    "sqlite": "^5.1.1",
+    "sqlite3": "^5.1.7",
+    "swagger-ui-express": "^5.0.1",
+    "yamljs": "^0.3.0"
+  },
+  "devDependencies": {
+    "cross-env": "^7.0.3",
+    "nodemon": "^3.1.4",
+    "prettier": "^3.3.3"
+  },
+  "allowScripts": {
+    "sqlite3@5.1.7": true
+  },
+  "engines": {
+    "node": ">=20 <25"
+  }
+}

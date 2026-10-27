@@ -1,0 +1,14 @@
+<%- include('partials/header', { title: status + " — Réducteur d'URL" }) %>
+
+    <main class="error-page">
+      <p class="error-status"><%= status %></p>
+      <h1><%= status === 404 ? "Lien introuvable" : "Une erreur est survenue" %></h1>
+      <p>
+        <%= status === 404
+          ? "Ce lien n'existe pas ou a été supprimé."
+          : "Le service rencontre un problème. Réessayez dans un instant." %>
+      </p>
+      <a class="btn btn-primary" href="/">Créer un lien court</a>
+    </main>
+
+<%- include('partials/footer') %>

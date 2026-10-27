@@ -1,0 +1,187 @@
+openapi: 3.0.3
+info:
+  title: Réducteur d'URL
+  description: TP devweb — service de réduction d'URL (API v1 et v2)
+  version: 1.0.0
+
+servers:
+  - url: /api-v1
+    description: API v1 (JSON uniquement)
+  - url: /api-v2
+    description: API v2 (négociation de contenu JSON / HTML)
+
+components:
+  schemas:
+    Count:
+      type: object
+      properties:
+        count:
+          type: integer
+          example: 42
+    Link:
+      type: object
+      properties:
+        url:
+          type: string
+          example: WmFJQp
+        origin:
+          type: string
+          format: uri
+          example: https://nodejs.org/api/http.html#event-connect_1
+        created:
+          type: string
+          format: date-time
+    LinkCreated:
+      allOf:
+        - $ref: "#/components/schemas/Link"
+        - type: object
+          properties:
+            secret:
+              type: string
+              example: RatQak7Tz2Xw
+              description: >-
+                Secret à conserver pour pouvoir supprimer le lien (API v2
+                uniquement). À fournir dans l'en-tête X-API-Key. Il n'est
+                jamais renvoyé par la suite.
+    LinkStatus:
+      type: object
+      properties:
+        origin:
+          type: string
+          format: uri
+        created:
+          type: string
+          format: date-time
+        visit:
+          type: integer
+    Error:
+      type: object
+      properties:
+        error:
+          type: string
+  parameters:
+    ShortUrl:
+      name: url
+      in: path
+      required: true
+      schema:
+        type: string
+      description: Code court du lien réduit
+
+paths:
+  /:
+    get:
+      tags: [shortener]
+      summary: Nombre de liens créés
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Count"
+            text/html:
+              schema:
+                type: string
+        "406":
+          description: Format non supporté
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+    post:
+      tags: [shortener]
+      summary: Créer un lien réduit
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [url]
+              properties:
+                url:
+                  type: string
+                  format: uri
+                  description: URL longue à réduire (http ou https uniquement)
+                  example: https://perdu.com
+      responses:
+        "201":
+          description: Lien créé
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/LinkCreated"
+            text/html:
+              schema:
+                type: string
+        "400":
+          description: URL invalide ou manquante
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+        "406":
+          description: Format non supporté
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+
+  /status/{url}:
+    get:
+      tags: [shortener]
+      summary: État d'un lien (API v1 uniquement)
+      parameters:
+        - $ref: "#/components/parameters/ShortUrl"
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/LinkStatus"
+        "404":
+          description: Lien inconnu
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+
+  /error:
+    get:
+      tags: [shortener]
+      summary: Génère une erreur 500 (route de test, API v1 uniquement)
+      responses:
+        "500":
+          description: Erreur interne générée volontairement
+
+  /{url}:
+    get:
+      tags: [shortener]
+      summary: >-
+        API v1 : redirige vers l'URL d'origine.
+        API v2 : état du lien en JSON, ou redirection + comptage en HTML.
+      parameters:
+        - $ref: "#/components/parameters/ShortUrl"
+      responses:
+        "200":
+          description: État du lien (JSON, API v2)
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/LinkStatus"
+        "302":
+          description: Redirection vers l'URL d'origine
+        "404":
+          description: Lien inconnu
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+        "406":
+          description: Format non supporté
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"

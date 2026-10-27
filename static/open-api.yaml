@@ -11,6 +11,11 @@ servers:
     description: API v2 (négociation de contenu JSON / HTML)
 
 components:
+  securitySchemes:
+    ApiKeyAuth:
+      type: apiKey
+      in: header
+      name: X-API-Key
   schemas:
     Count:
       type: object
@@ -181,6 +186,42 @@ paths:
                 $ref: "#/components/schemas/Error"
         "406":
           description: Format non supporté
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+    delete:
+      tags: [shortener]
+      summary: Supprime un lien réduit (API v2 uniquement)
+      security:
+        - ApiKeyAuth: []
+      parameters:
+        - $ref: "#/components/parameters/ShortUrl"
+      responses:
+        "200":
+          description: Lien supprimé
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: Lien supprimé
+        "401":
+          description: En-tête X-API-Key manquante
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+        "403":
+          description: Clef API invalide
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+        "404":
+          description: Lien inconnu
           content:
             application/json:
               schema:

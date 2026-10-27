@@ -3,6 +3,7 @@ import crypto from "node:crypto";
 import {
   countLinks,
   createLink,
+  deleteLink,
   getLink,
   incrementVisit,
 } from "../database/database.mjs";
@@ -29,6 +30,14 @@ function shortUrlOf(req, code) {
 
 function generateSecret() {
   return crypto.randomBytes(9).toString("base64url");
+}
+
+// Comparaison à temps constant, pour ne rien laisser deviner du secret
+// via le temps de réponse.
+function secretsMatch(provided, expected) {
+  const a = Buffer.from(provided);
+  const b = Buffer.from(expected ?? "");
+  return a.length === b.length && crypto.timingSafeEqual(a, b);
 }
 
 // GET /api-v2/ : json -> nombre de liens | html -> formulaire de création
@@ -112,6 +121,31 @@ router.get(
 
     await incrementVisit(link.url);
     res.redirect(link.origin);
+  }),
+);
+
+// DELETE /api-v2/:url : suppression protégée par le secret (en-tête X-API-Key)
+router.delete(
+  "/:url",
+  asyncHandler(async (req, res) => {
+    const link = await getLink(req.params.url);
+
+    if (!link) {
+      return res.status(404).json({ error: "Lien inconnu" });
+    }
+
+    const apiKey = req.get("X-API-Key");
+
+    if (!apiKey) {
+      return res.status(401).json({ error: "En-tête X-API-Key manquante" });
+    }
+
+    if (!secretsMatch(apiKey, link.secret)) {
+      return res.status(403).json({ error: "Clef API invalide" });
+    }
+
+    await deleteLink(link.url);
+    res.status(200).json({ message: "Lien supprimé" });
   }),
 );
 
